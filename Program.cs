@@ -30,36 +30,49 @@ void Start()
                 int max = SetNumber("max elements");
                 int[,] matrix = GetRandomIntMatrix(rows, columns, min, max);
                 PrintMatrixInt(matrix);
-
+                SortArray(matrix);
                 PrintMatrixInt(matrix);
                 break;
-            case 50:
+            case 56:
                 Console.Clear();
                 rows = SetNumber("rows");
                 columns = SetNumber("columns");
                 min = SetNumber("min elements");
                 max = SetNumber("max elements");
-                int elements = SetNumber("elements");
                 int[,] matr = GetRandomIntMatrix(rows, columns, min, max);
-                System.Console.WriteLine(SearchElements(matr, elements));
                 PrintMatrixInt(matr);
+                System.Console.WriteLine($"Minimal summa {Summa(matr).Item1} rows = {Summa(matr).Item2}");
                 break;
 
 
-            case 52:
+            case 58:
                 Console.Clear();
                 rows = SetNumber("rows");
                 columns = SetNumber("columns");
                 min = SetNumber("min elements");
                 max = SetNumber("max elements");
-                int[,] array = GetRandomIntMatrix(rows, columns, min, max);
-                PrintMatrixInt(array);
-                SqrtSumma(array, rows, columns);
+                int[,] arrayOne = GetRandomIntMatrix(rows, columns, min, max);
+                int[,] arrayTwo = GetRandomIntMatrix(rows, columns, min, max);
+
+
+                break;
+
+
+            case 60:
+                Console.Clear();
+
+                break;
+
+
+            case 62:
+                Console.Clear();
+
                 break;
             default: System.Console.WriteLine("error"); break;
         }
     }
 }
+
 
 int SetNumber(string numberName)
 {
@@ -68,23 +81,17 @@ int SetNumber(string numberName)
     return num;
 }
 
-double[,] GetRandomDoubleMatrix(int rows, int columns, int min, int max)
+void PrintMatrixInt(int[,] matrix)
 {
     System.Console.WriteLine();
-
-    double[,] array = new double[rows, columns];
-
-    var rand = new Random();
-
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < matrix.GetLength(0); i++)
     {
-        for (int j = 0; j < columns; j++)
+        for (int j = 0; j < matrix.GetLength(1); j++)
         {
-            array[i, j] = Math.Round((rand.Next(min, max + 1 ) + rand.NextDouble()),3);
+            System.Console.Write($"{matrix[i, j]} ");
         }
+        System.Console.WriteLine();
     }
-
-    return array;
 }
 
 int[,] GetRandomIntMatrix(int rows, int columns, int min, int max)
@@ -104,56 +111,106 @@ int[,] GetRandomIntMatrix(int rows, int columns, int min, int max)
     return array;
 }
 
-void SortArray(int[,] matrix)
+int[,] SortArray(int[,] matrix)
 {
     System.Console.WriteLine();
     for (int i = 0; i < matrix.GetLength(0); i++)
     {
-        for (int j = 0; j < matrix.GetLength(1); j++)
+        for (int j = matrix.GetLength(1) - 1; j > 0; j--)
         {
-            System.Console.Write($"{matrix[i, j]} ");
+            for (int k = 0; k < j; ++k)
+            {
+                if (matrix[i, k] <= matrix[i, k + 1])
+                {
+                    int temp = matrix[i, k];
+                    matrix[i, k] = matrix[i, k + 1];
+                    matrix[i, k + 1] = temp;
+                }
+            }
         }
+
         System.Console.WriteLine();
     }
-
+    return matrix;
 }
 
-void PrintMatrixInt(int[,] matrix)
+(int rows, int min) Summa(int[,] matrix)
 {
-    System.Console.WriteLine();
+    int[] matr = new int[matrix.GetLength(0)];
     for (int i = 0; i < matrix.GetLength(0); i++)
     {
+        int sum = 0;
         for (int j = 0; j < matrix.GetLength(1); j++)
         {
-            System.Console.Write($"{matrix[i, j]} ");
+            sum += matrix[i, j];
         }
-        System.Console.WriteLine();
+        matr[i] = sum;
     }
-}
-
-string SearchElements(int[,] matrix, int elements)
-{
-    for (int i = 0; i < matrix.GetLength(0); i++)
+    int min = matr[0];
+    int rows = 0;
+    for (int k = 0; k < matr.Length; k++)
     {
-        for (int j = 0; j < matrix.GetLength(1); j++)
+        if (matr[k] < min)
         {
-            if (matrix[i, j] == elements)  return $"Index elements {elements} = ({i}, {j})"; 
+            min = matr[k];
+            rows = k;
         }
     }
-    return "Elements not found in matrix" ;
-
+    return (rows, min);
 }
 
-void SqrtSumma(int[,] array, int rows, int columns)
+int[,] SqrtArray(int[,] arrayOne, int[,] arrayTwo)
 {
-    for (int i = 0; i < columns; i++)
+    int[] array = arrayOne;
+    for (int i = 0; i < arrayOne.GetLength(0); i++)
     {
-
-        double sum = 0;
-        for (int j = 0; j < rows; j++)
+        for (int j = 0; j < arrayOne.GetLength(1); j++)
         {
-            sum += array[j,i];
+            array[i, j] = arrayOne[i, j] * arrayTwo[i, j];
         }
-        System.Console.WriteLine($"Arithmetic mean {i} columns = {sum / rows}");
     }
+    return array;
 }
+
+
+
+
+// void PrintMatrixInt(int[,] matrix)
+// {
+//     System.Console.WriteLine();
+//     for (int i = 0; i < matrix.GetLength(0); i++)
+//     {
+//         for (int j = 0; j < matrix.GetLength(1); j++)
+//         {
+//             System.Console.Write($"{matrix[i, j]} ");
+//         }
+//         System.Console.WriteLine();
+//     }
+// }
+
+// string SearchElements(int[,] matrix, int elements)
+// {
+//     for (int i = 0; i < matrix.GetLength(0); i++)
+//     {
+//         for (int j = 0; j < matrix.GetLength(1); j++)
+//         {
+//             if (matrix[i, j] == elements)  return $"Index elements {elements} = ({i}, {j})"; 
+//         }
+//     }
+//     return "Elements not found in matrix" ;
+
+// }
+
+// void SqrtSumma(int[,] array, int rows, int columns)
+// {
+//     for (int i = 0; i < columns; i++)
+//     {
+
+//         double sum = 0;
+//         for (int j = 0; j < rows; j++)
+//         {
+//             sum += array[j,i];
+//         }
+//         System.Console.WriteLine($"Arithmetic mean {i} columns = {sum / rows}");
+//     }
+// }
