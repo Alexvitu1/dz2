@@ -53,13 +53,15 @@ void Start()
                 max = SetNumber("max elements");
                 int[,] arrayOne = GetRandomIntMatrix(rows, columns, min, max);
                 int[,] arrayTwo = GetRandomIntMatrix(rows, columns, min, max);
-
-
+                PrintMatrixInt(SqrtArray(arrayOne, arrayTwo));
                 break;
 
 
             case 60:
                 Console.Clear();
+                int[,,] matrix3d = new int[2, 2, 2];
+                GetRandomMatrix3D(matrix3d);
+                PrintMatrix3D(matrix3d);
 
                 break;
 
@@ -74,7 +76,7 @@ void Start()
 }
 
 
-int SetNumber(string numberName)
+int SetNumber(string numberName = "")
 {
     Console.Write($"Enter number {numberName}: ");
     int num = Convert.ToInt32(Console.ReadLine());
@@ -161,56 +163,104 @@ int[,] SortArray(int[,] matrix)
 
 int[,] SqrtArray(int[,] arrayOne, int[,] arrayTwo)
 {
-    int[] array = arrayOne;
-    for (int i = 0; i < arrayOne.GetLength(0); i++)
+    var array = new int[arrayOne.GetLength(0), arrayTwo.GetLength(1)]; ;
+    if (arrayOne.GetLength(1) == arrayTwo.GetLength(0))
     {
-        for (int j = 0; j < arrayOne.GetLength(1); j++)
+        for (int i = 0; i < array.GetLength(0); i++)
         {
-            array[i, j] = arrayOne[i, j] * arrayTwo[i, j];
+            for (int j = 0; j < array.GetLength(1); j++)
+            {
+                array[i, j] = 0;
+                for (int k = 0; k < arrayOne.GetLength(1); k++)
+                {
+                    array[i, j] += arrayOne[i, k] * arrayTwo[k, j];
+                }
+            }
         }
     }
     return array;
 }
 
+void Fillarray(int[] array)
+{
+    var rand = new Random();
+    int[] arrray = new int[8];
+    for (int item = 0; item < arrray.Length; item++)
+    {
+        arrray[item] = rand.Next(10, 100);
+    }
+}
 
+int[] SortMin(int[] matrix)
+{
+    for (int i = 0; i < matrix.Length - 1; i++)
+    {
+        for (int j = 0; j < matrix.Length - 1; j++)
+        {
+            if (matrix[j] > matrix[j + 1])
+            {
+                int tmp = matrix[j];
+                matrix[j] = matrix[j + 1];
+                matrix[j + 1] = tmp;
+            }
+        }
+    }
+    return matrix;
+}
 
+int[] SortDublicat(int[] array)
+{
+    int[] arrray = new int[8];
+    Fillarray(arrray);
+    SortMin(arrray);
+    int count = 0;
+    var rand = new Random();
+    for (int i = 0; i < arrray.Length - 1; i++)
+    {
+        if (arrray[i] == arrray[i + 1])
+        {
+            arrray[i + 1] = rand.Next(10, 100);
+            count += 1;
+        }
+    }
 
-// void PrintMatrixInt(int[,] matrix)
-// {
-//     System.Console.WriteLine();
-//     for (int i = 0; i < matrix.GetLength(0); i++)
-//     {
-//         for (int j = 0; j < matrix.GetLength(1); j++)
-//         {
-//             System.Console.Write($"{matrix[i, j]} ");
-//         }
-//         System.Console.WriteLine();
-//     }
-// }
+    count != 0 ?  SortDublicat(arrray) : return arrray;
+   
+}
 
-// string SearchElements(int[,] matrix, int elements)
-// {
-//     for (int i = 0; i < matrix.GetLength(0); i++)
-//     {
-//         for (int j = 0; j < matrix.GetLength(1); j++)
-//         {
-//             if (matrix[i, j] == elements)  return $"Index elements {elements} = ({i}, {j})"; 
-//         }
-//     }
-//     return "Elements not found in matrix" ;
+int[,,] GetRandomMatrix3D(int[,,] array)
+{
+    System.Console.WriteLine();
+    int[] arr = new int[8];
+    SortDublicat(arr);
+    int count = 0;
+    for (int i = 0; i < array.GetLength(0); i++)
+    {
+        for (int j = 0; j < array.GetLength(1); j++)
+        {
+            for (int k = 0; k < array.GetLength(2); k++)
+            {
+                array[i, j, k] = arr[count];
+                count += 1;
+            }
+        }
+    }
+    return array;
+}
 
-// }
+void PrintMatrix3D(int[,,] array)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            for (int k = 0; k < 2; k++)
+            {
+                System.Console.Write($"{array[i, j, k]} ( {i}, {j}, {k} )");
+            }
+            System.Console.WriteLine();
+        }
+        System.Console.WriteLine();
+    }
 
-// void SqrtSumma(int[,] array, int rows, int columns)
-// {
-//     for (int i = 0; i < columns; i++)
-//     {
-
-//         double sum = 0;
-//         for (int j = 0; j < rows; j++)
-//         {
-//             sum += array[j,i];
-//         }
-//         System.Console.WriteLine($"Arithmetic mean {i} columns = {sum / rows}");
-//     }
-// }
+}
