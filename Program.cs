@@ -60,15 +60,22 @@ void Start()
             case 60:
                 Console.Clear();
                 int[,,] matrix3d = new int[2, 2, 2];
-                GetRandomMatrix3D(matrix3d);
+                int[] arrray = new int[8];
+                Fillarray(arrray);
+                SortMin(arrray);
+                SortDublicat(arrray, 8);
+                GetRandomMatrix3D(matrix3d, arrray);
                 PrintMatrix3D(matrix3d);
-
                 break;
 
 
             case 62:
                 Console.Clear();
-
+                rows = SetNumber("rows");
+                columns = rows;
+                int[,] arraySpiral = new int[rows, columns];
+                GetMatrixSpiral(arraySpiral, rows, columns);
+                PrintMatrixInt(arraySpiral);
                 break;
             default: System.Console.WriteLine("error"); break;
         }
@@ -85,7 +92,7 @@ int SetNumber(string numberName = "")
 
 void PrintMatrixInt(int[,] matrix)
 {
-    System.Console.WriteLine();
+       System.Console.WriteLine();
     for (int i = 0; i < matrix.GetLength(0); i++)
     {
         for (int j = 0; j < matrix.GetLength(1); j++)
@@ -95,6 +102,32 @@ void PrintMatrixInt(int[,] matrix)
         System.Console.WriteLine();
     }
 }
+
+int[,] GetMatrixSpiral(int[,] array, int rows, int columns)
+{
+    int num = 1;
+    int i = 0;
+    int j = 0;
+
+    while (num <= rows * columns)
+    {
+        array[i, j] = num;
+        if (i <= j + 1 && i + j < columns - 1)
+            ++j;
+        else if (i < j && i + j >= rows - 1)
+            ++i;
+        else if (i >= j && i + j > columns - 1)
+            --j;
+        else
+            --i;
+        ++num;
+    }
+
+    return array;
+}
+
+
+
 
 int[,] GetRandomIntMatrix(int rows, int columns, int min, int max)
 {
@@ -181,14 +214,14 @@ int[,] SqrtArray(int[,] arrayOne, int[,] arrayTwo)
     return array;
 }
 
-void Fillarray(int[] array)
+int[] Fillarray(int[] array)
 {
     var rand = new Random();
-    int[] arrray = new int[8];
-    for (int item = 0; item < arrray.Length; item++)
+    for (int item = 0; item < array.Length; item++)
     {
-        arrray[item] = rand.Next(10, 100);
+        array[item] = rand.Next(10, 100);
     }
+    return array;
 }
 
 int[] SortMin(int[] matrix)
@@ -208,44 +241,46 @@ int[] SortMin(int[] matrix)
     return matrix;
 }
 
-int[] SortDublicat(int[] array)
+int[] SortDublicat(int[] array, int length)
 {
-    int[] arrray = new int[8];
-    Fillarray(arrray);
-    SortMin(arrray);
+
     int count = 0;
     var rand = new Random();
-    for (int i = 0; i < arrray.Length - 1; i++)
+    for (int i = 0; i < array.Length - 1; i++)
     {
-        if (arrray[i] == arrray[i + 1])
+        if (array[i] == array[i + 1])
         {
-            arrray[i + 1] = rand.Next(10, 100);
+            array[i + 1] = rand.Next(10, 100);
             count += 1;
         }
     }
+    if (count != 0)
+    {
+        return SortDublicat(array, array.Length);
+    }
+    else
+    {
+        return array;
+    }
 
-    count != 0 ?  SortDublicat(arrray) : return arrray;
-   
 }
 
-int[,,] GetRandomMatrix3D(int[,,] array)
+int[,,] GetRandomMatrix3D(int[,,] matrix, int[] arr)
 {
     System.Console.WriteLine();
-    int[] arr = new int[8];
-    SortDublicat(arr);
     int count = 0;
-    for (int i = 0; i < array.GetLength(0); i++)
+    for (int i = 0; i < matrix.GetLength(0); i++)
     {
-        for (int j = 0; j < array.GetLength(1); j++)
+        for (int j = 0; j < matrix.GetLength(1); j++)
         {
-            for (int k = 0; k < array.GetLength(2); k++)
+            for (int k = 0; k < matrix.GetLength(2); k++)
             {
-                array[i, j, k] = arr[count];
+                matrix[i, j, k] = arr[count];
                 count += 1;
             }
         }
     }
-    return array;
+    return matrix;
 }
 
 void PrintMatrix3D(int[,,] array)
